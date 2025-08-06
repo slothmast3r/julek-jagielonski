@@ -1,25 +1,22 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import React from 'react'
-import type { Header } from '@/payload-types'
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
 
 interface HeaderClientProps {
-  data: Header
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
-  const pathname = usePathname()
-
+export const HeaderClient: React.FC<HeaderClientProps> = ({ isOpen, setIsOpen }) => {
   return (
     <header className="container relative z-20 py-8 flex justify-between items-center">
       <Link href="/">
         <Logo loading="eager" priority="high" className="invert" />
       </Link>
-      <HeaderNav data={data} />
+      <HeaderNav isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   )
 }
