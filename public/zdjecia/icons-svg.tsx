@@ -13,5 +13,20 @@ function LogoSvg() {
     </svg>
   )
 }
+function BurgerSvg() {
+  return (
+    <svg
+      enable-background="new 6.729 9.518 20 20"
+      height="20"
+      viewBox="6.729 9.518 20 20"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="m6.729 12.518h20v2h-20z"></path>
+      <path d="m6.729 24.518h20v2h-20z"></path>
+      <path d="m6.729 18.518h20v2h-20z"></path>
+    </svg>
+  )
+}
 
-export { LogoSvg }
+export { LogoSvg, BurgerSvg }

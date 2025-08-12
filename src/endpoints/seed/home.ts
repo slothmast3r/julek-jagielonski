@@ -47,7 +47,7 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
                   format: 0,
                   mode: 'normal',
                   style: '',
-                  text: 'Payload Website Template',
+                  text: 'Klub Jagielonski',
                   version: 1,
                 },
               ],
@@ -666,9 +666,10 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
       },
     ],
     meta: {
-      description: 'An open-source website built with Payload and Next.js.',
+      description:
+        'Jesteśmy republikańskim i niepartyjnym stowarzyszeniem, które próbuje oddziaływać na politykę w duchu troski o dobro wspólne. Piszemy pogłębione artykuły o polityce, gospodarce, historii i kulturze. Formułujemy obywatelskie postulaty zmian i wysyłamy petycje do władz. Publikujemy komentarze ekspertów i tematyczne raport. Działamy w całej Polsce.',
       image: heroImage.id,
-      title: 'Payload Website Template',
+      title: 'Klub jagielonski',
     },
     title: 'Home',
   }

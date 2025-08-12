@@ -30,20 +30,24 @@ const config = {
     container: {
       center: true,
       padding: {
-        '2xl': '2rem',
-        DEFAULT: '1rem',
-        lg: '2rem',
-        md: '2rem',
-        sm: '1rem',
-        xl: '2rem',
+        DEFAULT: '10px', // < 768px  -> left/right 10px
+        xl: '1rem', // ≥ 1240px -> 1rem
+        '2xl': '2rem', // ≥ 1400px -> 2rem
+        '3xl': '5vw', // ≥ 1600px -> 5vw
       },
       screens: {
-        '2xl': '86rem',
-        lg: '64rem',
-        md: '48rem',
-        sm: '40rem',
-        xl: '80rem',
+        xl: '1240px',
+        '2xl': '1400px',
+        '3xl': '1600px', // “largest”
       },
+    },
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1240px',
+      '2xl': '1400px',
+      '3xl': '1600px',
     },
     extend: {
       animation: {
