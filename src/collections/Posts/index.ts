@@ -27,6 +27,15 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from '@/fields/slug'
 
+const normalizeRel = (c: any) => (typeof c === 'object' ? (c?.id ?? c?.value ?? c) : c)
+
+const isFeaturedByCategories = (categories?: any[], featuredCategoryId?: string | number) => {
+  if (!categories || featuredCategoryId == null) return false
+  const tgt = String(featuredCategoryId)
+  return categories.some((c) => String(normalizeRel(c)) === tgt)
+}
+const FEATURED_CATEGORY_ID = process.env.PAYLOAD_FEATURED_CATEGORY_ID || '1'
+
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
   access: {
@@ -85,6 +94,14 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'media',
             },
             {
+              name: 'authorIntro',
+              type: 'text',
+              admin: {
+                description: 'Optional short line to introduce the author and angle',
+              },
+              required: false,
+            },
+            {
               name: 'content',
               type: 'richText',
               editor: lexicalEditor({
@@ -131,6 +148,57 @@ export const Posts: CollectionConfig<'posts'> = {
               },
               hasMany: true,
               relationTo: 'categories',
+            },
+            {
+              name: 'featured',
+              type: 'checkbox',
+              admin: {
+                position: 'sidebar',
+                description:
+                  'Mirrors whether this post is in the Featured category. Auto-synced on save.',
+                readOnly: true,
+              },
+            },
+            {
+              name: 'featuredCardColor',
+              label: 'Card Color (Featured only)',
+              type: 'select',
+              options: [
+                { label: 'Ocean Mist', value: '#009886' },
+                { label: 'Midnight Sky', value: '#00058a' },
+                { label: 'Velvet Rose', value: '#9a016f' },
+              ],
+              required: false,
+              admin: {
+                description:
+                  'Choose from 3 colorways for Featured cards. Non-Featured posts will ignore this.',
+                // Show only if Featured – either via mirrored boolean or live category check
+                condition: (data, siblingData) => {
+                  // prefer the mirrored boolean if present
+                  if (typeof siblingData?.featured === 'boolean') return siblingData.featured
+                  // fallback: check categories in the form state against known Featured ID
+                  return isFeaturedByCategories(siblingData?.categories, FEATURED_CATEGORY_ID)
+                },
+              },
+              hooks: {
+                // optional: validate that this is set when post is featured
+                // Note: this runs on API (not just admin), keep it lenient if you backfill
+                beforeValidate: [
+                  ({ value, siblingData, originalDoc }) => {
+                    const featured =
+                      siblingData?.featured ??
+                      isFeaturedByCategories(
+                        siblingData?.categories ?? originalDoc?.categories,
+                        FEATURED_CATEGORY_ID,
+                      )
+                    if (featured && !value) {
+                      // choose a sensible default
+                      return 'sunset'
+                    }
+                    return value
+                  },
+                ],
+              },
             },
           ],
           label: 'Meta',
@@ -223,6 +291,14 @@ export const Posts: CollectionConfig<'posts'> = {
     afterChange: [revalidatePost],
     afterRead: [populateAuthors],
     afterDelete: [revalidateDelete],
+    beforeValidate: [
+      async ({ data, originalDoc }) => {
+        if (!data) return
+        const categories = data.categories ?? originalDoc?.categories
+        const featured = isFeaturedByCategories(categories, FEATURED_CATEGORY_ID)
+        data.featured = featured
+      },
+    ],
   },
   versions: {
     drafts: {

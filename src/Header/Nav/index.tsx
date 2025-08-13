@@ -12,7 +12,7 @@ export const HeaderNav: React.FC<{
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative z-50 p-2 bg-white text-black rounded-full shadow-md"
+        className="absolute top-5 right-5 z-50 p-2 bg-white text-black rounded-full shadow-md"
         aria-label="Toggle menu"
       >
         <span className="sr-only">Toggle menu</span>

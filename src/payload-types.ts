@@ -215,6 +215,10 @@ export interface Post {
   id: number;
   title: string;
   heroImage?: (number | null) | Media;
+  /**
+   * Optional short line to introduce the author and angle
+   */
+  authorIntro?: string | null;
   content: {
     root: {
       type: string;
@@ -232,6 +236,14 @@ export interface Post {
   };
   relatedPosts?: (number | Post)[] | null;
   categories?: (number | Category)[] | null;
+  /**
+   * Mirrors whether this post is in the Featured category. Auto-synced on save.
+   */
+  featured?: boolean | null;
+  /**
+   * Choose from 3 colorways for Featured cards. Non-Featured posts will ignore this.
+   */
+  featuredCardColor?: ('#009886' | '#00058a' | '#9a016f') | null;
   meta?: {
     title?: string | null;
     /**
@@ -1131,9 +1143,12 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
   heroImage?: T;
+  authorIntro?: T;
   content?: T;
   relatedPosts?: T;
   categories?: T;
+  featured?: T;
+  featuredCardColor?: T;
   meta?:
     | T
     | {

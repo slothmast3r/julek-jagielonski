@@ -3,7 +3,7 @@ import React from 'react'
 function LogoSvg() {
   return (
     <svg
-      enable-background="new 0 0 406.4 166.776"
+      enableBackground="new 0 0 406.4 166.776"
       height="166.776"
       viewBox="0 0 406.4 166.776"
       width="406.4"
@@ -16,7 +16,7 @@ function LogoSvg() {
 function BurgerSvg() {
   return (
     <svg
-      enable-background="new 6.729 9.518 20 20"
+      enableBackground="new 6.729 9.518 20 20"
       height="20"
       viewBox="6.729 9.518 20 20"
       width="20"

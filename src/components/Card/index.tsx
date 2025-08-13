@@ -29,6 +29,43 @@ export const Card: React.FC<{
   const sanitizedDescription = description?.replace(/\s/g, ' ') // replace non-breaking space with white space
   const href = `/${relationTo}/${slug}`
 
+  const FEATURED_CATEGORY_ID: string | number | undefined = process.env
+    .NEXT_PUBLIC_FEATURED_CATEGORY_ID as any // or hardcode
+  const FEATURED_CATEGORY_SLUG = 'featured' // change if yours differs (e.g., 'wyroznione')
+
+  // normalize relationship values coming from Payload
+  const normalizeRel = (c: any) => {
+    if (!c) return undefined
+    if (typeof c === 'object') return c
+    // primitive id
+    return { id: c }
+  }
+
+  const isFeaturedCat = (c: any) => {
+    if (!c || typeof c !== 'object') return false
+    const id = c.id ?? c.value
+    const slug = (c.slug ?? c?.value?.slug ?? '').toString().toLowerCase()
+    const title = (c.title ?? '').toString().toLowerCase()
+    const matchesId = FEATURED_CATEGORY_ID != null && String(id) === String(FEATURED_CATEGORY_ID)
+    const matchesSlug = slug === FEATURED_CATEGORY_SLUG
+    const matchesTitle = title === FEATURED_CATEGORY_SLUG
+    return Boolean(matchesId || matchesSlug || matchesTitle)
+  }
+
+  const primaryCategoryTitle = React.useMemo(() => {
+    if (!Array.isArray(categories) || categories.length === 0) return null
+
+    const objs = categories.map(normalizeRel).filter((c: any) => typeof c === 'object')
+
+    if (!objs.length) return null
+
+    // pick the first NON-featured category
+    const nonFeatured = objs.find((c: any) => !isFeaturedCat(c))
+    const chosen = nonFeatured ?? objs[0]
+
+    return chosen?.title || chosen?.name || 'Untitled category'
+  }, [categories])
+
   return (
     <article
       className={cn('overflow-hidden bg-card hover:cursor-pointer', className)}
@@ -39,34 +76,18 @@ export const Card: React.FC<{
         {metaImage && typeof metaImage !== 'string' && (
           <Media resource={metaImage} size="33vw" fill />
         )}
+        {showCategories && primaryCategoryTitle && (
+          <span
+            className={cn(
+              'absolute top-2 right-2 rounded-full px-3 py-1 text-xs font-medium',
+              'bg-black/80 text-white backdrop-blur-sm',
+            )}
+          >
+            {primaryCategoryTitle}
+          </span>
+        )}
       </div>
       <div className="p-4">
-        {showCategories && hasCategories && (
-          <div className="uppercase text-sm mb-4">
-            {showCategories && hasCategories && (
-              <div>
-                {categories?.map((category, index) => {
-                  if (typeof category === 'object') {
-                    const { title: titleFromCategory } = category
-
-                    const categoryTitle = titleFromCategory || 'Untitled category'
-
-                    const isLast = index === categories.length - 1
-
-                    return (
-                      <Fragment key={index}>
-                        {categoryTitle}
-                        {!isLast && <Fragment>, &nbsp;</Fragment>}
-                      </Fragment>
-                    )
-                  }
-
-                  return null
-                })}
-              </div>
-            )}
-          </div>
-        )}
         {titleToUse && (
           <div className="prose">
             <h3>

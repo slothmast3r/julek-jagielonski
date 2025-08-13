@@ -12,7 +12,7 @@ interface HeaderClientProps {
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ isOpen, setIsOpen }) => {
   return (
-    <header className="container relative z-20 py-8 flex justify-between items-center">
+    <header className="container relative z-20 py-8 flex justify-center items-center">
       <Link href="/">
         <Logo loading="eager" priority="high" className="invert" />
       </Link>
